@@ -1,66 +1,182 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Io-wraps by mashery</title>
+    <title>Mashery Developer Tools - I/O Wraps</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!-- Le styles -->
+    <link href="http://mashery.github.com/assets/css/bootstrap.css" rel="stylesheet">
+    <link href="http://mashery.github.com/assets/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="http://mashery.github.com/assets/css/docs.css" rel="stylesheet">
+    <link href="http://mashery.github.com/assets/js/google-code-prettify/prettify.css" rel="stylesheet">
+	<link href="http://mashery.github.com/assets/css/mashery-tools.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="assets/ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
+
+	<!-- BEGIN Google Analytics -->
+	<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-476443-10']);
+	  _gaq.push(['_trackPageview']);
+
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+
+	</script>
+	<!-- END Google Analytics -->
+
   </head>
-  <body>
-    <div class="wrapper">
-      <header>
-        <h1>Io-wraps</h1>
-        <p></p>
 
-        <p class="view"><a href="https://github.com/mashery/io-wraps">View the Project on GitHub <small>mashery/io-wraps</small></a></p>
+  <body data-spy="scroll" data-target=".subnav" data-offset="50" class="project-home">
 
 
-        <ul>
-          <li><a href="https://github.com/mashery/io-wraps/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/mashery/io-wraps/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/mashery/io-wraps">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h3>Welcome to GitHub Pages.</h3>
-
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
-
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
-
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
-
-<h3>Designer Templates</h3>
-
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
-
-<h3>Rather Drive Stick?</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
-
-<h3>Authors and Contributors</h3>
-
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/mashery">mashery</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
+  <!-- Navbar
+    ================================================== -->
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+		<div id="logo"><img class="bs-icon" src="http://mashery.github.com/assets/img/mashery-logo.png"></div>
+		
+          <button type="button"class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <!-- <a class="brand" href="./index.html">Bootstrap</a> -->
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="">
+                <a href="http://dev.mashery.com">Home</a>
+              </li>
+              <li class="">
+                <a href="http://dev.mashery.com/apis">APIs</a>
+              </li>
+              <li class="active">
+                <a href="http://mashery.github.com">Tools</a>
+              </li>
+              <li class="">
+                <a href="http://mashery.appstores.com">Apps</a>
+              </li>
+              <li class="">
+                <a href="http://masherydev.tumblr.com">Blog</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
-    
+
+    <div class="container">
+
+<!-- Masthead
+================================================== -->
+<header class="jumbotron masthead">
+  <div class="inner">
+	<h1>I/O Wraps: Coming Soon</h1>
+
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+		<p class="marketing-byline">Then, of course, we open sourced it.</p>
+
+  </div>
+
+</header>
+
+<hr class="soften">
+
+<div class="marketing">
+	<h1>Because wraps are awesome</h1>
+	
+  <div class="row">
+    <div class="span4">
+      <img class="bs-icon" src="http://mashery.github.com/assets/img/glyphicons/glyphicons_079_podium.png">
+
+      <h2>Wrap One</h2>
+      <p class="description"><strong>Wrap One</strong> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex</p>
+	<p><a class="btn btn-primary" href="#">View on GitHub</a></p>
+    </div>
+    <div class="span4">
+      <img class="bs-icon" src="http://mashery.github.com/assets/img/glyphicons/glyphicons_082_roundabout.png">
+      <h2>Wrap Two</h2>
+      <p class="description"><strong>Wrap Two</strong> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex</p>
+	<p><a class="btn btn-primary" href="#">View on GitHub</a></p>    </div>
+    <div class="span4">
+      <img class="bs-icon" src="http://mashery.github.com/assets/img/glyphicons/glyphicons_155_show_thumbnails.png">
+      <h2>Wrap Three</h2>
+      <p class="description"><strong>Wrap Three</strong> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex</p>
+	<p><a class="btn btn-primary" href="#">View on GitHub</a></p>    </div>
+  </div><!--/row-->
+
+  <hr class="soften">
+
+  <h1>Built with love. By Developers. For Developers.</h1>
+  <p class="marketing-byline">Check out our <a href="http://http://dev.mashery.com/apis">APIs</a> | Our <a href="http://mashery.appstores.com">AppStore</a> for examples of apps built using Mashery APIs | Read our <a href="http://masherydev.tumblr.com">blog</a>.</p>
+
+  <div class="bs-links">
+    <ul class="quick-links">
+      <li class="follow-btn">
+        <a href="https://twitter.com/masherydev" class="twitter-follow-button" data-link-color="#0069D6" data-show-count="true">Follow @masherydev</a>
+      </li>
+      <li class="tweet-btn">
+        <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://mashery.github.com/" data-count="horizontal" data-via="twbootstrap" data-related="mdo:Creator of Twitter Bootstrap">Tweet</a>
+      </li>
+    </ul>
+  </div>
+
+</div><!-- /.marketing -->
+
+<!-- Footer
+ ================================================== -->
+ <footer class="footer">
+   <p class="pull-right"><a href="#">Back to top</a></p>
+   <p>* Designed and built with lots of <span class="love">love</span> in <strong>New York</strong> &amp; <strong>San Francisco</strong> by the biggest little <a href="http://twitter.com/masherydev">Developer Outreach team</a> on seven continents.</p>
+   <p>* Code licensed under the <a href="http://www.opensource.org/licenses/mit-license.html">MIT License</a>. Documentation licensed under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.</p>
+   <p>* Powered by <a href="http://github.com">Github</a> &amp; <a href="http://twitter.github.com/bootstrap">Bootstrap</a></p>
+
+   <p>* Icons from <a href="http://glyphicons.com">Glyphicons Free</a>, licensed under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.</p>
+ </footer>
+
+    </div><!-- /container -->
+
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+    <script src="assets/js/jquery.js"></script>
+    <script src="assets/js/google-code-prettify/prettify.js"></script>
+    <script src="assets/js/bootstrap-transition.js"></script>
+    <script src="assets/js/bootstrap-alert.js"></script>
+    <script src="assets/js/bootstrap-modal.js"></script>
+    <script src="assets/js/bootstrap-dropdown.js"></script>
+    <script src="assets/js/bootstrap-scrollspy.js"></script>
+    <script src="assets/js/bootstrap-tab.js"></script>
+    <script src="assets/js/bootstrap-tooltip.js"></script>
+    <script src="assets/js/bootstrap-popover.js"></script>
+    <script src="assets/js/bootstrap-button.js"></script>
+    <script src="assets/js/bootstrap-collapse.js"></script>
+    <script src="assets/js/bootstrap-carousel.js"></script>
+    <script src="assets/js/bootstrap-typeahead.js"></script>
+    <script src="assets/js/application.js"></script>
+
+
   </body>
 </html>
