@@ -1,0 +1,6 @@
+/* Definition for {{ model.packageRelativeClassName }} */
+// class {{ model.className }} {
+{% for child in model.children %}
+{% indent %}{% call_template _model_def model child %} {% endindent %}
+{% endfor %}
+// }

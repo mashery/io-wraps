@@ -1,0 +1,41 @@
+{
+ "name": "myservice",
+ "version": "v1",
+ "description": "A service without the datawrapper",
+ "restBasePath": "/myservice/v1/",
+ "rpcPath": "/rpc",
+ "schemas": {
+  "Thing": {
+   "id": "Thing",
+   "type": "object",
+   "properties": {
+    "count": { "type": "integer" },
+    "value": { "type": "string" }
+   }
+  }
+ },
+ "resources": {
+  "foo": {
+   "methods": {
+    "count": {
+     "id": "myservice.foo.count",
+     "restPath": "foo/count",
+     "rpcMethod": "myservice.foo.count",
+     "httpMethod": "GET",
+     "description": "Get a count of link Things",
+     "parameters": {
+      "thingUrl": {
+       "restParameterType": "query",
+       "repeated": false,
+       "description": "a description would go here.",
+       "type": "string"
+      }
+     },
+     "response": {
+      "$ref": "Thing"
+     }
+    }
+   }
+  }
+ }
+}

@@ -1,0 +1,47 @@
+{
+  "languages": {
+    "java": {
+      "displayName": "Java",
+      "surface_options": {
+        "preview": {
+          "releaseVersion": "1.2.1-SNAPSHOT",
+          "path": "default",
+          "description": "Java libraries for Google APIs at client head.",
+          "baseClientLibrary": "head",
+          "platforms": ["cmd-line"],
+          "library": true
+        },
+        "stable": {
+          "releaseVersion": "1.2.2-beta",
+          "path": "stable",
+          "description": "Java libraries for Google APIs.",
+          "baseClientLibrary": "1.5.0",
+          "platforms": ["cmd-line"],
+          "library": true
+        }
+      }
+    },
+    "python": {
+      "displayName": "Python",
+      "surface_options": {
+        "stable": {
+          "releaseVersion": "1.0beta4",
+          "path": "stable",
+          "description": "Python libraries for Google APIs.",
+          "baseClientLibrary": "head",
+          "platforms": ["cmd-line", "appengine"],
+          "skeleton": true,
+          "library": false
+        }
+      }
+    }
+  },
+  "platforms": {
+    "cmd-line": {
+      "displayName": "Command-Line"
+    },
+    "appengine": {
+      "displayName": "Google App Engine"
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{% language objc %}{% copyright_block %}
+// This file was generated:
+//   with {{ tool.name }} {{ tool.version }}{% if tool.buildDate %} (build: {{ tool.buildDate }}){% endif %}{% if options.include_timestamp %}
+//   on {{ tool.runDate }} at {{ tool.runTime }} {% endif %}
+//
+//  {{ model.className }}.h
+//
+
+// ----------------------------------------------------------------------------
+// NOTE: This file is generated from Google APIs Discovery Service.
+// Service:
+//   {{ api.title }} ({{ api.name }}/{{ api.version }})
+// Description:
+//   {{ api.description }}
+// Classes:
+//   {{ model.className }}
+// Documentation:
+//   {{ api.documentationLink }}
+
+#if GTL_BUILT_AS_FRAMEWORK
+  #import "GTL/GTLObject.h"
+#else
+  #import "GTLObject.h"
+#endif
+
+{% filter noblanklines %}
+{% for import in model.extraImports %}
+#import {{ import }};
+{% endfor %}
+{% endfilter %}
+
+// ----------------------------------------------------------------------------
+//
+//   {{ model.className }}
+//
+{% doc_comment_if model.description %}
+@interface {{ model.className }} : {{ model.superClass }}
+
+{% if model.arrayOf %}@property (retain) {{ model.codeType }} items;{% endif %}
+{% for property in model.properties %}
+{% doc_comment_if property.description %}
+//  wirename: ("{{ property.wireName }}")
+@property (retain) {{ property.codeType }} *{{ property.codeName }};  // {{ property.type }}
+{% endfor %}
+@end
+#endif // !GTL_REQUIRE_SERVICE_INCLUDES || GTL_INCLUDE_{{ api.name }}_SERVICE

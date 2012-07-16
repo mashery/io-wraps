@@ -1,0 +1,108 @@
+{% comment %}
+The main template on which base a single Go source will be generated.
+The name of this file will be substituted by the actual package name,
+which is for technical reasons contained in template variable api.className.
+
+TODO (wgg): nested resources
+TODO (wgg): top-level methods
+{% endcomment %}
+{% filter collapse_blanklines %}
+{% language go %}{% copyright_block %}
+
+{% filter block_comment %}
+// This file was generated with {{ tool.name }} {{ tool.version }}{% if tool.buildDate %} (build: {{ tool.buildDate }}){% endif %}
+// {% if options.include_timestamp %} on {{ tool.runDate }} at {{ tool.runTime }}{% endif %}
+{% endfilter %}
+
+{% filter block_comment %}
+// The {{ api.className }} API. {{ api.description }}
+{% endfilter %}
+package {{ api.className }}
+
+import (
+        "bytes"`
+        "fmt"
+        "http"
+        "io"
+        "json"
+        "os"
+        "strings"
+        "strconv"
+)
+
+// Do we really need this?
+// var _ = bytes.NewBuffer
+// var _ = strconv.Itoa
+// var _ = fmt.Sprintf
+// var _ = json.NewDecoder
+
+func New(client *http.Client) (*Api, os.Error) {{% indent %}
+{% filter noblanklines %}
+if client == nil { return nil, os.NewError("client is nil") }
+api := &Api{client: client, host: "{{ api.serviceHost }}", endpoint: "{{api.basePath }}"}
+{% for resource in api.resources %}
+api.{{ resource.accessorName }} = &{{ resource.className }}{api: api}
+{% endfor %}
+return api, nil
+{% endfilter %}
+{% endindent %}}
+
+type Api struct {{% indent %}
+client *http.Client
+host string
+endpoint string
+{% for resource in api.resources %}
+// Accessor for the {{ resource.wireName }} resource.
+{{ resource.accessorName }} *{{ resource.className }}
+{% endfor %}
+{% endindent %}}
+
+// Changes the default host to the given value.
+func (api *Api) Host(host string) *Api {
+     api.host = host
+     return api
+}
+
+// Changes the default endpoint to the given value.
+func (api *Api) Endpoint(endpoint string) {
+     api.endpoint = endpoint
+     return api
+}
+
+// Helper to make a url based on host, endpoint, and rest path
+func (api *Api) makeUrl(restPath string) {
+     return host + "/" + endpoint + "/" + restPath
+}
+
+// Helper to insert a parameter into a URL
+func (api *Api) substitute(url string, param string, value interface{}) {
+     return strings.Replace(url, "{" + param + "}",
+                            cleanPathString(fmt.Sprintf("%v", value)))
+}
+
+// Helper to clean a string to be suitable for a URL path
+func cleanPathString(s string) string {
+     return strings.Map(
+                func(r int) int {
+                   if r >= 0x30 && r <= 0x7a { return r };
+                   return -1
+                },
+                s)
+}
+
+
+type HTTPStatusError http.Response
+
+func (h HTTPStatusError) String() string {
+ return fmt.Sprintf("got http status %d", h.StatusCode)
+}
+
+{% for model in api.models %}
+{% emit_model_def model %}
+{% endfor %}
+
+{% for resource in api.resources %}
+{% emit_resource_def resource %}
+{% endfor %}
+{% endfilter %}
+

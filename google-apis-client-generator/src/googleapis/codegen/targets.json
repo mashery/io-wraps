@@ -1,0 +1,116 @@
+{
+  "languages": {
+    "csharp": {
+      "displayName": "C#",
+      "surface_options": {
+        "experimental": {
+          "releaseVersion": "0.1",
+          "path": "experimental",
+          "description": "Experimental C# generator for Google APIS.",
+          "baseClientLibrary": "head",
+          "platforms": ["cmd-line"]
+        }
+      }
+    },
+    "go": {
+      "displayName": "Go",
+      "surface_options": {
+        "default": {
+          "releaseVersion": "0.1-alpha",
+          "path": "default",
+          "description": "Go libraries for Google APIS.",
+          "baseClientLibrary": "head",
+          "platforms": ["cmd-line"]
+         }
+       }
+    },
+    "gwt": {
+      "displayName": "GWT",
+      "surface_options": {
+        "default": {
+          "releaseVersion": "0.2-alpha",
+          "path": "default",
+          "description": "GWT libraries for Google APIS.",
+          "baseClientLibrary": "head",
+          "platforms": ["cmd-line"]
+        },
+        "stable": {
+          "releaseVersion": "0.1-alpha",
+          "path": "stable",
+          "description": "GWT libraries for Google APIS.",
+          "baseClientLibrary": "2.3.0",
+          "platforms": ["cmd-line"]
+        }
+      }
+    },
+    "java": {
+      "displayName": "Java",
+      "surface_options": {
+        "default": {
+          "releaseVersion": "head",
+          "path": "default",
+          "description": "Java libraries for Google APIs at client head.",
+          "baseClientLibrary": "head",
+          "platforms": ["cmd-line"]
+        },
+        "stable": {
+          "releaseVersion": "1.3.0-beta",
+          "path": "stable",
+          "description": "Java libraries for Google APIs.",
+          "baseClientLibrary": "1.6.0",
+          "platforms": ["cmd-line"]
+        }
+      }
+    },
+    "objc": {
+      "displayName": "Objective-C",
+      "surface_options": {
+        "experimental": {
+          "description": "Experimental Objective-C generator.",
+          "releaseVersion": "0.0.1",
+          "path": "experimental",
+          "platforms": ["cmd-line"]
+        }
+      }
+    },
+    "php": {
+      "displayName": "PHP",
+      "surface_options": {
+        "default": {
+          "releaseVersion": "0.4.1",
+          "path": "default",
+          "description": "PHP libraries for Google APIs.",
+          "baseClientLibrary": "head",
+          "platforms": ["cmd-line"]
+        },
+        "stable": {
+          "releaseVersion": "0.4.1",
+          "path": "stable",
+          "description": "PHP libraries for Google APIs.",
+          "baseClientLibrary": "0.4.1",
+          "platforms": ["cmd-line"]
+        }
+      }
+    },
+    "python": {
+      "displayName": "Python",
+      "surface_options": {
+        "stable": {
+          "releaseVersion": "1.0beta4",
+          "path": "stable",
+          "description": "Python libraries for Google APIs.",
+          "baseClientLibrary": "head",
+          "platforms": ["cmd-line"]
+        }
+      }
+    }
+  },
+  "platforms": {
+    "cmd-line": {
+      "displayName": "Command-Line"
+    },
+    "web": {
+      "displayName": "Web"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{% comment %}
+A template generating a 'model' (i.e. a data structure used by the API)
+{% endcomment %}
+{% if model.description %}
+{% filter block_comment %}
+// {{ model.description }}
+{% endfilter %}
+{% endif %}
+type {{ model.className }} struct { {% indent %}
+{% if model.arrayOf %}
+Items {{ model.codeType }}  `json:"items,omitempty"`
+{% endif %}
+{% for property in model.properties %}
+{% if property.description %}
+{% filter block_comment %}
+// {{ property.description }}
+{% endfilter %}{% endif %}
+{{ property.codeName }} {{ property.codeType }} `json:"{{ property.wireName }},omitempty`
+{% endfor %}{% endindent %}}

@@ -1,0 +1,194 @@
+<html>
+	<head>
+		<title>I/O Wraps - JSON Schema Converter</title>
+		<script src="http://code.jquery.com/jquery-1.7.2.js" type="text/javascript"></script>
+		<link rel="stylesheet" href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" media="screen" />
+	</head>
+	<body>
+		<div class="container" id="mainwrap">
+			<header>
+				<h1>Mashery I/O Wraps - JSON Schema Converter</h1>
+				<h4 style="line-height: 20px;">Use this script to convert a Mashery I/O Docs JSON Schema configuration to the Google Discovery Format, for use with client
+				library generator. Note that the acceptable schema format is that of the Mashery product version, not the I/O Docs Node.js (Github) project. A converter
+				from that schema format will be provided in the near future.</h4>
+				<br />
+			</header>
+			<span style="font-size:12pt; font-weight:bold;">I/O Docs JSON Schema</span> -
+			<input type="button" class="btn btn-primary" id="php_to_goog" onclick="iodocs_to_goog();" value="Convert to Google Discovery Format" />
+			<button class="btn btn-danger" onclick="$('#iodocs_src').val('');">
+				Reset
+			</button>
+			<br />
+			<br />
+			<textarea id="iodocs_src" name="iodocs_src" class="input-large" style="width:800px;height:300px;">
+</textarea>
+			<br />
+			<br />
+			<span style="font-size:12pt; font-weight:bold;">Google Discovery Format</span> -
+			<button class="btn btn-danger" onclick="$('#goog_src').val('');">
+				Reset
+			</button>
+			<br />
+			<br />
+			<textarea id="goog_src" name="goog_src" class="input-large" style="width:800px;height:300px;" readonly="readonly">
+</textarea>			
+
+
+			<script type="text/javascript">
+				// validateName
+				//  Resource, method and parameter names must conform to this regex.
+				//  See name_validator.py in the Google Client Library Generator for all
+				//  regex details. The schema specification is not explicit about naming
+				//  conventions; however, the generator code does enforce the regex below
+				//  most likely for native language compatibility.
+				var nameRegex = /(^[a-zA-Z]$)|(^[a-zA-Z_$]{1}[a-zA-Z0-9_.-]*[a-zA-Z0-9_]{1})$/;
+				function validateName(varName, locRef) {
+					if (nameRegex.test(varName)) {
+						return true;
+					} else {
+						alert('Variable "' + varName + '" does not conform to style guide. ' + locRef);
+						return false;
+					}
+				}
+
+				// iodocs_to_good
+				function iodocs_to_goog() {
+					var iodocsJSON = jQuery.parseJSON(jQuery('#iodocs_src').val());
+					var googJSON = {};
+
+					googJSON.kind = "discovery#restDescription";
+					googJSON.discoveryVersion = "v1";
+					googJSON.title = iodocsJSON.title;
+					googJSON.description = iodocsJSON.description;
+					googJSON.protocol = iodocsJSON.protocol;
+					googJSON.name = (iodocsJSON.title.replace(new RegExp(' ', 'g'), '')).toLowerCase();
+					if ( typeof iodocsJSON.version == 'undefined') {
+						googJSON.version = "1";
+					} else {
+						googJSON.version = iodocsJSON.version;
+					}
+					googJSON.auth = iodocsJSON.auth;
+
+					// Parse the basePath into "uri" object
+					var uri = parseUri(iodocsJSON.basePath);
+					// Set basePath, rootUrl, servicePat and baseUrl from URI paths.
+					// Additionally, strip out trailing slashes from values.
+					googJSON.basePath = uri.path;
+					googJSON.rootUrl = uri.protocol + "://" + uri.authority + "/";
+					googJSON.rootUrl = (googJSON.rootUrl.replace(new RegExp('[\/]{1,}$', ''), ''));
+					googJSON.servicePath = uri.path.substr(1, uri.path.length - 1) + "/";
+					googJSON.servicePath = (googJSON.servicePath.replace(new RegExp('[\/]{1,}$', ''), ''));
+					googJSON.baseUrl = googJSON.rootUrl + googJSON.servicePath;
+					googJSON.baseUrl = (googJSON.baseUrl.replace(new RegExp('[\/]{1,}$', ''), ''));
+
+					// googJSON.resources = iodocsJSON.resources -- but first, we strip out the spaces in
+					// the names and add "id" if that doesn't exist.
+					var googResources = {};
+					for (resource in iodocsJSON.resources) {
+
+						if (!validateName(resource, '(see resources)')) {
+							return false;
+						}
+						resourceCompressed = resource.replace(" ", "");
+						phpResource = iodocsJSON.resources[resource];
+						googResources[resourceCompressed] = {};
+						googResources[resourceCompressed]["methods"] = {};
+						for (method in phpResource.methods) {
+							if (!validateName(method, '(see resources.' + resource + '.methods)')) {
+								return false;
+							}
+							methodCompressed = method.replace(new RegExp(' ', 'g'), '');
+							googResources[resourceCompressed]["methods"][methodCompressed] = phpResource.methods[method];
+							googResources[resourceCompressed]["methods"][methodCompressed]["id"] = resourceCompressed + "." + methodCompressed;
+						}
+					}
+					googJSON.resources = googResources;
+
+					// Iterate through googJSON.resources for transformations
+					for (resource in googJSON.resources) {
+
+						for (method in googJSON.resources[resource].methods) {
+
+							// methodCompressed = method.replace(new RegExp(' ','g'),'');
+							googMethod = googJSON.resources[resource].methods[method];
+
+							// Remove leading slash from method path
+							googMethod.path = googMethod.path.replace(/^\//, "");
+
+							// Change pathReplace to just path
+							if (googMethod.location == "pathReplace") {
+								googMethod.location = "path";
+							}
+
+							// Check for "id" -- if not there, then add it.
+							if (!( typeof googMethod.id != 'undefined')) {
+								googMethod.id = method
+							}
+
+							// Iterate through all methods params
+							for (param in googMethod.parameters) {
+								if (!validateName(param, '(see resources.' + resource + '.methods.' + method + '.parameters)')) {
+									return false;
+								}
+								googParam = googJSON.resources[resource].methods[method].parameters[param];
+
+								// Replicate enum into enumDescriptions for Google format
+								if (( typeof googParam.enum != 'undefined') && (!( typeof googParam.enumDescriptions != 'undefined'))) {
+									googParam.enumDescriptions = googParam.enum;
+								}
+
+								// Replace "pathReplace" with "path"
+								if (googParam.location == 'pathReplace') {
+									googParam.location = 'path';
+
+									// Encapsulate the parameter name with curly brackets in method's path
+									googMethod.path = (googMethod.path.replace(new RegExp(param, 'g'), '{' + param + '}'));
+								}
+							}
+						}
+						// Format the output with 4-space padding
+						var googJSONstring = JSON.stringify(googJSON, null, 4);
+						jQuery('#goog_src').val(googJSONstring);
+					}
+				}
+
+				// parseUri 1.2.2
+				// (c) Steven Levithan <stevenlevithan.com>
+				// MIT License
+
+				function parseUri(str) {
+					var o = parseUri.options, m = o.parser[o.strictMode ? "strict" : "loose"].exec(str), uri = {}, i = 14;
+
+					while (i--)
+					uri[o.key[i]] = m[i] || "";
+
+					uri[o.q.name] = {};
+					uri[o.key[12]].replace(o.q.parser, function($0, $1, $2) {
+						if ($1)
+							uri[o.q.name][$1] = $2;
+					});
+
+					return uri;
+				};
+
+				parseUri.options = {
+					strictMode : false,
+					key : ["source", "protocol", "authority", "userInfo", "user", "password", "host", "port", "relative", "path", "directory", "file", "query", "anchor"],
+					q : {
+						name : "queryKey",
+						parser : /(?:^|&)([^&=]*)=?([^&]*)/g
+					},
+					parser : {
+						strict : /^(?:([^:\/?#]+):)?(?:\/\/((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?))?((((?:[^?#\/]*\/)*)([^?#]*))(?:\?([^#]*))?(?:#(.*))?)/,
+						loose : /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/
+					}
+				};
+
+				// end parseUri
+
+			</script>
+		</div>
+	</body>
+</html>
+
+

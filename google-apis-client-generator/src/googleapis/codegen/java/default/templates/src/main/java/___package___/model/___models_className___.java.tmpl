@@ -1,0 +1,81 @@
+{% language java %}{% copyright_block %}
+/*
+ * Warning! This file is generated. Modify at your own risk.
+ */
+
+package {{ model.package.name }};
+
+
+{% imports model %}
+import com.google.api.client.http.HttpHeaders;
+import com.google.api.client.json.GenericJson;
+import com.google.api.client.util.Key;
+
+import java.math.BigInteger;
+{% endimports %}
+
+
+/**{% filter block_comment %}
+ * Model definition for {{ api.className }}.{{ model.className }}.
+ *
+ * {{ model.description }}
+ *
+ * This class models an object which will be transmitted to or from the
+ * {{ api.className }} service.
+ * To reduce the data transferred during service requests, you may remove
+ * members that contain data elements that your application does not need.
+ *
+ * For a detailed explanation, see:
+ * <a href="http://code.google.com/p/google-api-java-client/wiki/Json">
+ * http://code.google.com/p/google-api-java-client/wiki/Json</a>
+ *
+ * @author Google, Inc.
+ * {% endfilter %}
+ */
+public final class {{ model.className }} extends GenericJson {
+{% if model.arrayOf %}
+  @Key
+  {{ model.codeType }} items;
+{% endif %}{% for property in model.properties %}
+  /**{% filter block_comment %}
+   * {{ property.description }}{% endfilter %}
+   */
+  @Key("{{ property.wireName }}"){% if property.requiresJsonString %} @JsonString{% endif %}
+  private {{ property.codeType }} {{ property.codeName }};
+
+  {% doc_comment_if property.description %}
+  public {{ property.codeType }} get{{ property.codeName|capfirst }}() {
+    return {{ property.codeName }};
+  }
+
+  {% doc_comment_if property.description %}
+  public {{ model.className}} set{{ property.codeName|capfirst }}({{ property.codeType }} {{property.codeName }}) {
+    this.{{ property.codeName }} = {{ property.codeName}};
+    return this;
+  }{% endfor %}
+
+{% if not model.parent %}
+  private HttpHeaders responseHeaders;
+
+  /**{% filter block_comment %}
+   * Sets the HTTP headers returned with the server response, or <code>null</code>.
+   *
+   * This member should only be non-null if this object was the top level
+   * element of a response. For example, a request that returns a single
+   * {{ model.className }} would include the response headers, while a request
+   * which returns an array of {{ model.className }}, would have a non-null
+   * response header in the enclosing object only.
+   * {% endfilter %}
+   */
+  public void setResponseHeaders(HttpHeaders responseHeaders) {
+    this.responseHeaders = responseHeaders;
+  }
+
+  /**
+   * Returns the HTTP headers that were returned with the server response, or
+   * <code>null</code>.
+   */
+  public HttpHeaders getResponseHeaders() {
+    return responseHeaders;
+  }{% endif %}
+}

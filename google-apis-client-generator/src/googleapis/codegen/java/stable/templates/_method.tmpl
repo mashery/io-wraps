@@ -1,0 +1,109 @@
+/**{% filter block_comment %}
+ * {% if method.description %}{{ method.description }}
+ * {% endif %}
+ * Create a request for the method
+ * "{% if resource %}{{ resource.wireName }}.{% endif %}{{ method.wireName }}".
+ *
+ * This request holds the parameters needed by the the {{ api.name }}
+ * server.  After setting any optional parameters, call the
+ * {@link {{ method.className }}#execute()}
+ * method to invoke the remote operation.
+ * {% endfilter %}
+ * {% for param in method.requiredParameters %}
+ * @param {{ param.codeName }} {% emit_parameter_doc param %}{% endfor %}{% if method.requestType %}
+ * @param content the {@link {{ method.requestType.className }}}{% endif %}
+ * @return the request
+ * @throws IOException if the initialization of the request fails
+ */
+public {{ method.className }} {{ method.codeName }}({% parameter_list %}
+    {% for p in method.requiredParameters %}
+      {% parameter %}{{ p.codeType }} {{ p.codeName }}{% end_parameter %}
+    {% endfor %}
+    {% if method.requestType %}
+      {% parameter %}
+        {{ method.requestType.fullClassName }} content
+      {% end_parameter %}
+    {% endif %}
+  {% end_parameter_list %}) throws IOException {
+  {{ method.className }} result = new {{ method.className }}({% parameter_list %}
+    {% for p in method.requiredParameters %}
+      {% parameter %}{{ p.codeName }}{% end_parameter %}
+    {% endfor %}
+    {% if method.requestType %}
+      {% parameter %}content{% end_parameter %}
+    {% endif %}
+  {% end_parameter_list %});
+  initialize(result);
+  return result;
+}
+
+public class {{ method.className }} extends {{ api.className }}Request {
+
+  private static final String REST_PATH = "{{ method.restPath }}";
+
+{% filter noblanklines %}
+  /**
+   * Internal constructor.  Use the convenience method instead.
+   */
+  private {{ method.className }}({% parameter_list %}
+    {% for p in method.requiredParameters %}
+      {% parameter %}{{ p.codeType }} {{ p.codeName }}{% end_parameter %}
+    {% endfor %}
+    {% if method.requestType %}
+      {% parameter %}{{ method.requestType.fullClassName }} content{% end_parameter %}
+    {% endif %}
+    {% end_parameter_list %}) {
+    super({{ api.className }}.this, HttpMethod.{{ method.httpMethod }}, REST_PATH, {% if method.requestType %}content{% else %}null{% endif %});
+  {% for param in method.requiredParameters %}
+    this.{{ param.codeName }} = {{ param.codeName }};
+  {% endfor %}
+  {% if method.requestType %}
+    this.content = content;
+  {% endif %}
+  }
+{% endfilter %}
+
+  /**{% filter block_comment %}
+   * Sends the "{{ method.codeName }}" request to the {{ api.className }}
+   * server.
+   * {% endfilter %}
+   * {% if method.response %}
+   * @return the {@link {{ method.responseType.fullClassName }}} response{% endif %}
+   * @throws IOException if the request fails
+   */
+  public {{ method.responseType.fullClassName }} execute() throws IOException {
+    HttpResponse response = executeUnparsed();
+    {% if method.response %}
+    {{ method.responseType.fullClassName }} result = response.parseAs(
+        {{ method.responseType.fullClassName }}.class);
+    result.setResponseHeaders(response.getHeaders());
+    return result;
+    {% else %}
+    response.ignore();
+    {% endif %}
+  }
+
+{% for param in method.parameters %}
+  {% doc_comment_if param.description %}
+  @Key("{{ param.wireName }}")
+  private {{ param.codeType }} {{ param.codeName }};
+
+  /**{% filter block_comment %} {% filter noblanklines %}{{ param.description }}
+{% if param.default %} [default: {{ param.default }}]{% endif %}
+{% if param.minimum %} [minimum: {{ param.minimum }}]{% endif %}
+{% if param.maximum %} [maximum: {{ param.maximum }}]{% endif %} {% endfilter %} {% endfilter %}
+   */
+  public {{ param.codeType }} get{{ param.codeName|capfirst }}() {
+    return {{ param.codeName }};
+  }
+
+  {% doc_comment_if param.description %}
+  public {{ method.className }} set{{ param.codeName|capfirst }}({{ param.codeType }} {{ param.codeName }}) {
+    this.{{ param.codeName }} = {{ param.codeName }};
+    return this;
+  }
+  {% endfor %}
+{% if method.requestType %}
+  private {{ method.requestType.fullClassName }} content;
+{% endif %}
+}

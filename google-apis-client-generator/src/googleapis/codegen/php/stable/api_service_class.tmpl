@@ -1,0 +1,53 @@
+<?php
+{% language php %}{% copyright_block %}
+
+require_once 'service/apiModel.php';
+require_once 'service/apiService.php';
+require_once 'service/apiServiceRequest.php';
+
+{% for resource in api.resources %}
+{% indent %}{% emit_resource_def resource %}{% endindent %}
+{% endfor %}
+{% for method in api.methods %}
+{% indent %}{% emit_resource_def method %}{% endindent %}
+{% endfor %}
+
+/**
+ * Service definition for {{ api.className }} ({{ api.version }}).
+ *
+ * <p>
+ * {{ api.description }}
+ * </p>
+ *
+ * <p>
+ * For more information about this service, see the
+ * <a href="{{ api.documentationLink }}" target="_blank">API Documentation</a>
+ * </p>
+ *
+ * @author Google, Inc.
+ */
+class api{{ api.className }}Service extends apiService {
+{% filter noblanklines %}{% for resource in api.resources %}
+{% indent %}public ${{ resource.wireName }};{% endindent %}
+{% endfor %}{% endfilter %}
+  /**{% filter block_comment %}
+   * Constructs the internal representation of the {{ api.className }} service.
+   * {% endfilter %}
+   *
+   * @param apiClient apiClient
+   */
+  public function __construct(apiClient $apiClient) {
+    $this->rpcPath = '/rpc';
+    $this->restBasePath = '{{ api.basePath }}';
+    $this->version = '{{ api.version }}';
+    $this->serviceName = '{{ api.name }}';
+    $this->io = $apiClient->getIo();
+
+    $apiClient->addService($this->serviceName, $this->version);
+{% filter noblanklines %}
+{% for resource in api.resources %}
+    $this->{{ resource.wireName }} = new {{ resource.className }}ServiceResource($this, $this->serviceName, '{{ resource.wireName }}', json_decode('{{ resource.json }}', true));
+{% endfor %}
+{% endfilter %}
+  }
+}

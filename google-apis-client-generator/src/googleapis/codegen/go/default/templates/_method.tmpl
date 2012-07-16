@@ -1,0 +1,152 @@
+{% comment %}
+Generate a type which holds the data for the method call:
+
+type MethodCall struct {
+        api *Api
+        param1 T1
+        param2 T2
+        ...
+        entity *RequestData
+        opt_ http.Values
+}
+{% endcomment %}
+{% filter noblanklines %}
+// Represents a {{ method.codeName }} call. Use {{ method.codeName }} to construct
+// values of this type with required parameter values. Use setters for providing
+// optional parameter values. Use Do to execute the call.
+type {{ method.className }} struct {{% indent %}
+api *Api
+{% for parameter in method.required_parameters %}
+{{ parameter.codeName }} {{ parameter.codeType }}
+{% endfor %}
+{% if method.requestType %}
+entity *{{ method.requestType.className }}
+{% endif %}
+opt_ http.Values
+{% endindent %}}
+{% endfilter %}
+
+{% comment %}
+Generate a function to construct the data for a method call:
+
+func (r *Resource) Method(param1 T1, param2 T2, ..., entity *RequestData) *MethodCall {
+        c := &MethodCall(api: r.api, opt_: make(http.Values))
+        c.param1 = param1
+        c.param2 = param2
+        ...
+        c.entity = entity
+        return c
+}
+{% endcomment %}
+{% filter noblanklines %}
+{% filter block_comment %}
+// {{ method.description }}
+{% endfilter %}
+{% for param in method.requiredParameters %}
+{% filter block_comment %}
+// - {{ param.codeName }}: {{ param.description }}
+// {% if param.default %} [default: {{ param.default }}]{% endif %}
+// {% if param.minimum %} [minimum: {{ param.minimum }}]{% endif %}
+// {% if param.maximum %} [maximum: {{ param.maximum }}]{% endif %}
+{% endfilter %}
+{% endfor %}
+{% if method.requestType %}
+// - entity: entity put or posted with this call
+{% endif %}
+func (r *{{ resource.className }}) {{ method.codeName }}({% parameter_list %}
+    {% for p in method.requiredParameters %}
+      {% parameter %}{{ p.codeName }} {{ p.codeType }}{% end_parameter %}
+    {% endfor %}
+    {% if method.requestType %}
+      {% parameter %}
+        entity *{{ method.requestType.fullClassName }}
+      {% end_parameter %}
+    {% endif %}
+  {% end_parameter_list %}) *{{ method.className }} {{% indent %}
+c := &{{ method.className }}(api: r.api, opt_: make(http.Values))
+{% for parameter in method.required_parameters %}
+c.{{ parameter.codeName }} = {{ parameter.codeName }}
+{% endfor %}
+{% if method.requestType %}
+c.entity = entity
+{% endif %}
+return c
+{% endindent %}}
+{% endfilter %}
+
+{% comment %}
+Generate setters for optional parameters
+
+func (c *MethodCall)Param(param T) *MethodCall {
+        c.opt_.Set("param", fmt.Sprintf("%v", param))
+        return c
+}
+{% endcomment %}
+{% for param in method.optionalParameters %}
+{% filter block_comment %}
+// {{ param.description }}
+// {% if param.default %} [default: {{ param.default }}]{% endif %}
+// {% if param.minimum %} [minimum: {{ param.minimum }}]{% endif %}
+// {% if param.maximum %} [maximum: {{ param.maximum }}]{% endif %}
+{% endfilter %}
+func (c *{{ method.className }}) {{ param.codeName|capfirst }}({{ param.codeName }} {{param.codeType}}) *{{ method.className }} {{% indent %}
+c.opt_.Set("{{ param.wireName }}", fmt.Sprintf("%v", {{ param.codeName }}))
+return c
+{% endindent %}}
+{% endfor %}
+
+{% comment %}
+Generate function doing the call
+
+func (c *MethodCall) Do() (*ResponseType, io.Error) {
+        url := c.api.makeUrl("foo/{param1}/bar/{param2}
+        url = c.api.substitute("param1", c.param1)
+        url = c.api.substitute("param2", c.param2)
+        ...
+        url += "?" + c.opt_.Encode()
+        bs, err := json.Marshall(c.entity)
+        if err != nil { return nil, err }
+        body := bytes.NewBuffer(bs)
+        req, _ := http.NewRequest("PUT", url, body)
+        res, err := c.api.client.Do(req)
+        if err != nil { return nil, err }
+        if res.StatusCode < 200 || res.StatusCode > 299 { return nil, HTTPStatusError(*re }
+        ret := new(ResponseType)
+        if err := json.NewDecoder(res.Body).Decode(ret); err != nil { return nil, err }
+        return ret, nil
+}
+{% endcomment %}
+{% filter noblanklines %}
+{% if method.response %}
+// Does {{ method.className }}. Delivers a {{ method.responseType.className }} entity if successful.
+func (c *{{ method.className }}) Do() (*{{ method.responseType.className }}, os.Error) {
+{% else %}
+// Executes {{ method.className }}.
+func (c *{{ method.className }}) Do() os.Error {
+{% endif %}
+{% indent %}
+url := c.api.makeUrl("{{ method.restPath }}")
+{% for param in method.pathParameters %}
+url = c.api.substitute(url, "{{ param.wireName }}", c.{{ param.codeName }})
+{% endfor %}
+if len(c.opt_) > 0 { url += "?" + c.opt_.Encode() }
+{% if method.requestType %}
+bs, err := json.Marshal(c.entity)
+if err != nil { return nil, err }
+body := bytes.NewBuffer(bs)
+{% else %}
+var body io.Reader = nil
+{% endif %}
+req, _ := http.NewRequest("{{ method.httpMethod }}", url, body)
+res, err := c.api.client.Do(req)
+if err != nil { return nil, err }
+if res.StatusCode < 200 || res.StatusCode > 299 { return nil, HTTPStatusError(*res) }
+{% if method.response %}
+ret := new({{ method.responseType.className }})
+if err := json.NewDecoder(res.Body).Decode(ret); err != nil { return nil, err }
+return ret, nil
+{% else %}
+return nil
+{% endif %}
+{% endindent %}}
+{% endfilter %}

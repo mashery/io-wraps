@@ -1,0 +1,14 @@
+{% comment %}
+A template generating a 'resource'. Calls generating methods on the resource.
+{% endcomment %}
+{% if resource.description %}
+{% filter block_comment %}
+// {{ resource.description }}
+{% endfilter %}
+{% endif %}
+type {{ resource.className }} struct {
+     api *Api
+}
+{% for method in resource.methods %}
+{% emit_method_def method %}
+{% endfor %}

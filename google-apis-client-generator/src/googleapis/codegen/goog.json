@@ -1,0 +1,125 @@
+{
+    "kind": "discovery#restDescription",
+    "discoveryVersion": "v1",
+    "title": "Autocomplete API",
+    "description": "Predicts search words or phrases for select areas of Rovi Cloud Services and returns results in order of popularity. ",
+    "protocol": "rest",
+    "name": "autocompleteapi",
+    "version": "1.0",
+    "basePath": "/search/v2/",
+    "rootUrl": "http://api.rovicorp.com",
+    "servicePath": "search/v2",
+    "baseUrl": "http://api.rovicorp.comsearch/v2",
+    "resources": {
+        "AutocompleteAPI": {
+            "methods": {
+                "Autocomplete": {
+                    "path": "{:endpoint}/autocomplete",
+                    "httpMethod": "GET",
+                    "description": "Predicts search words or phrases for select areas of Rovi Cloud Services and returns results in order of popularity. Fields in bold are required.",
+                    "parameters": {
+                        ":endpoint": {
+                            "type": "string",
+                            "required": true,
+                            "default": "music",
+                            "description": "Database to search",
+                            "enum": [
+                                "music",
+                                "amgvideo",
+                                "video"
+                            ],
+                            "enumDescriptions": [
+                                "music",
+                                "amgvideo (movies and TV shows on DVD)",
+                                "video (shows on TV)"
+                            ],
+                            "location": "path"
+                        },
+                        "entitytype": {
+                            "type": "string",
+                            "required": true,
+                            "default": "",
+                            "description": "Type of content to search for",
+                            "enum": [
+                                "album",
+                                "song",
+                                "artist",
+                                "movie",
+                                "tvseries",
+                                "credit",
+                                "movie",
+                                "tvseries",
+                                "onetimeonly",
+                                "credit"
+                            ],
+                            "enumDescriptions": [
+                                "album",
+                                "song",
+                                "artist (music)",
+                                "movie (on DVD)",
+                                "tvseries (on DVD)",
+                                "credits (on DVD)",
+                                "movie (on TV)",
+                                "tvseries (on TV)",
+                                "onetimeonly (on TV)",
+                                "credits (on TV)"
+                            ],
+                            "location": "query"
+                        },
+                        "query": {
+                            "type": "string",
+                            "required": true,
+                            "default": "",
+                            "description": "The search string",
+                            "location": "query"
+                        },
+                        "filter": {
+                            "type": "string",
+                            "required": false,
+                            "default": "",
+                            "description": "If you specify the clu parameter, filter filters out content that is not found on the television service channel lineup. Specified with a value of availability, like this: filter=availability.",
+                            "location": "query"
+                        },
+                        "country": {
+                            "type": "string",
+                            "required": false,
+                            "default": "US",
+                            "description": "Country of the language of the response. The current release of the API only supports US.",
+                            "location": "query"
+                        },
+                        "language": {
+                            "type": "string",
+                            "required": false,
+                            "default": "en",
+                            "description": "Language of the response data. This request only supports en (English).",
+                            "location": "query"
+                        },
+                        "size": {
+                            "type": "integer",
+                            "required": false,
+                            "default": 20,
+                            "description": "The number of items you want to be returned",
+                            "location": "query"
+                        },
+                        "format": {
+                            "type": "string",
+                            "required": false,
+                            "default": "json",
+                            "description": "Format of the returned data",
+                            "enum": [
+                                "json",
+                                "xml"
+                            ],
+                            "location": "query",
+                            "enumDescriptions": [
+                                "json",
+                                "xml"
+                            ]
+                        }
+                    },
+                    "id": "AutocompleteAPI.Autocomplete"
+                }
+            }
+        }
+    }
+}

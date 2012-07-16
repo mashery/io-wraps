@@ -1,0 +1,9 @@
+{% if model.builtIn %}// Skipping built in: {{ model.codeType }}
+{% for child in model.children %}{% call_template _model_def model child %}{% endfor %}
+{% else %}/* Definition for {{ model.packageRelativeClassName }} */
+public class {{ model.safeClassName }} / {{ model.className }} extends GenericJson {
+{% for child in model.children %}
+{% indent %}{% call_template _model_def model child %} {% endindent %}
+{% endfor %}
+}
+{% endif %}

@@ -1,0 +1,43 @@
+{% language objc %}{% copyright_block %}
+
+//
+//  {{ model.className }}.m
+//
+
+// ----------------------------------------------------------------------------
+// NOTE: This file is generated from Google APIs Discovery Service.
+// Service:
+//   {{ api.title }} ({{ api.name }}/{{ api.version }})
+// Description:
+//   {{ api.description }}
+// Classes:
+//   {{ model.className }}
+// Documentation:
+//   {{ api.documentationLink }}
+
+#import "{{ model.className }}.h"
+
+{% filter noblanklines %}
+{% for import in model.extraImports %}
+#import {{ import }};
+{% endfor %}
+{% endfilter %}
+
+// ----------------------------------------------------------------------------
+//
+//   {{ model.className }}
+//
+// {% filter block_comment %}
+// {{ model.description }}
+// {% endfilter %}
+@implementation {{ model.className }}
+@dynamic {% for property in model.properties %}, {{ property.codeName }}{% endfor %};
+
++ (NSDictionary *)arrayPropertyToClassMap {
+  NSDictionary *map =
+    [NSDictionary dictionaryWithObject:@"id"
+                                forKey:@"identifier"];
+  return map;
+}
+
+@end
