@@ -19,12 +19,15 @@ Client libraries make life easier by bringing the API into your native language 
     $api = new apiService($client);
 
     // Make an API call and store the response in an object
-    $StoryList = new StoryList($api -> ArticleMethods -> TopNews ("json","sports"));
+    $StoryList = new StoryList($api->ArticleMethods->TopNews(
+        "json",
+        "sports"
+    ));
 
     // Iterate through the list of stories, and echo the titles
     foreach ($StoryList->getStories() as $story) {
-       echo("Title: " . $story->getTitle());  
-	}
+       echo("Title: " . $story->getTitle());
+    }
 
 Above is just a pseudo-PHP-code example of how this library works.
 
