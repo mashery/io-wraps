@@ -70,7 +70,7 @@ At this point, you're ready to start linking the client libraries into your code
 
  [https://github.com/mashery/io-wraps-rovi-php](https://github.com/mashery/io-wraps-rovi-php)    
  [https://github.com/mashery/io-wraps-usatoday-php](https://github.com/mashery/io-wraps-usatoday-php)    
- [https://github.com/mashery/io-wraps/whitli-php](https://github.com/mashery/io-wraps/whitli-php)
+ [https://github.com/mashery/io-wraps-whitli-php](https://github.com/mashery/io-wraps-whitli-php)
 
 ## Java - Next Steps
 If you have generated a Java library, you simply need to build the Maven project. For example, if you set the --output_dir to /usr/src/io-wraps/new_api_java, follow these simple steps:
