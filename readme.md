@@ -34,24 +34,31 @@ Above is just a pseudo-PHP-code example of how this library works.
 ## Requirements
 1. Python (2.6+)
 2. [Google App Utils](http://code.google.com/p/google-apputils-python/downloads/detail?name=google-apputils-0.3.0.tar.gz&can=2&q=)
+3. Django templates (1.1 or newer) - either through django or Google AppEngine SDKs
+4. httplib2 - http://code.google.com/p/httplib2/
+5. python-gflags - http://code.google.com/p/python-gflags/
+6. setuptools - http://pypi.python.org/pypi/setuptools/
+
 
 ## Installation / Quick Start
 The steps below are for Linux, Mac OS X or other UNIX-variant operating systems.
 
 1. Deploy this distro to /usr/src/
 
-2. Unpack Google App utils to /usr/src/
+2. Unpack Google App utils to /usr/src/ - check README and build/install. 
 
-3. Point your browser to: /usr/src/io-wraps/iodocs_json_converter.html
+3. Install Django templates, httplib2, python-gflags and setuptools.
+
+4. Point your browser to: /usr/src/io-wraps/iodocs_json_converter.html
      a. Paste in an I/O Docs configuration from the Mashery Dashboard configuration
      b. Click Convert to Google Discovery Format button
      c. Save output in Google Discovery Format textarea to: /usr/src/io-wraps/new_api.json
 
-4. From shell: export PYTHONPATH=/usr/src/io-wraps/google-apis-client-generator/src:/usr/src/google-apputils-0.3.0/build/lib:/usr/lib/python2.6:$PYTHONPATH (assuming Python 2.6 is your current version)
+5. From shell: export PYTHONPATH=/usr/src/io-wraps/google-apis-client-generator/src:/usr/src/google-apputils-0.3.0/build/lib:/usr/lib/python2.6:$PYTHONPATH (assuming Python 2.6 is your current version)
 
-5. From shell: cd /usr/src/io-wraps/google-apis-client-generator/src/googleapis/codegen
+6. From shell: cd /usr/src/io-wraps/google-apis-client-generator/src/googleapis/codegen
 
-6. From shell: ./generate_library.py --language=php --language_variant=stable --output_dir=/usr/src/io-wraps/new_api_php --input=/usr/src/io-wraps/new_api.json
+7. From shell: ./generate_library.py --language=php --language_variant=stable --output_dir=/usr/src/io-wraps/new_api_php --input=/usr/src/io-wraps/new_api.json
 
 ## PHP - Next Steps
 If you have followed the instructions above and generated a PHP library, you will find it in:    
