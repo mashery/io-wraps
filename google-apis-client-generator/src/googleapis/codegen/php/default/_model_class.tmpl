@@ -1,6 +1,7 @@
 
 {% filter noblanklines %}
-class {{ model.className }} extends apiModel {
+class {{ model.className }} extends apiModel
+{{% indent %}
 {% for property in model.properties %}
   {% if property.typeHint %}
   protected $__{{ property.codeName }}Type = '{{ property.typeHint|cut:" " }}';
@@ -10,19 +11,41 @@ class {{ model.className }} extends apiModel {
 {% endfor %}
 {% for property in model.properties %}
   {% ifequal property.type "array" %}
-  public function set{{ property.codeName|capfirst }}(/* array({{ property.codeType }}) */ ${{ property.codeName }}) {
-    $this->assertIsArray(${{ property.codeName }}, {{ property.codeType }}, __METHOD__);
-    $this->{{ property.codeName }} = ${{ property.codeName }};
+/**
+ * Set {{ property.codeType }} values
+ *
+ * @param array ${{ property.codeName }} {{ property.codeType }}
+ *
+ * @return void
+ */
+public function set{{ property.codeName|capfirst }}(${{ property.codeName }})
+{
+{% indent %}$this->assertIsArray(${{ property.codeName }}, {{ property.codeType }}, __METHOD__);
+$this->{{ property.codeName }} = ${{ property.codeName }};{% endindent %}
   }
   {% else %}
-  public function set{{ property.codeName|capfirst }}({{ property.typeHint }}${{ property.codeName }}) {
-    $this->{{ property.codeName }} = ${{ property.codeName }};
+/**
+ * Set {{ property.codeType }} value
+ *
+ * @param {{ property.codeType }} ${{ property.codeName }} {{ property.codeType }}
+ *
+ * @return void
+ */
+public function set{{ property.codeName|capfirst }}({{ property.typeHint }}${{ property.codeName }})
+{
+{% indent %}$this->{{ property.codeName }} = ${{ property.codeName }};{% endindent %}
   }
   {% endifequal %}
+/**
+ * Get {{ property.codeType }} value
+ *
+ * @return {{ property.codeType }}
+ */
+public function get{{ property.codeName|capfirst }}()
+{
+{% indent %}return $this->{{ property.codeName }};{% endindent %}
+}
 
-  public function get{{ property.codeName|capfirst }}() {
-    return $this->{{ property.codeName }};
-  }
-  {% endfor %}
+  {% endfor %}{% endindent %}
 }
 {% endfilter %}

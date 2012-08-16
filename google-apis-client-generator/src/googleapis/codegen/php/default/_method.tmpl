@@ -14,32 +14,35 @@
  * @opt_param {{ param.codeType }} {{ param.wireName }} {{ param.description }}{% endfor %}
 {% endif %}
 {% if method.response %}
+ * 
  * @return {{ method.responseType.className }}
 {% endif %}
  */
 {% endfilter %}
-public function {{ method.name }}({% call_template _func_params method method %}) {
+public function {{ method.name }}({% call_template _func_params method method %})
+{
 {% filter noblanklines %}
-  $params = array({% parameter_list %}
+{% indent %}$params = array({% parameter_list %}
     {% for p in method.requiredParameters %}
       {% parameter %}'{{ p.wireName }}' => ${{ p.codeName }}{% end_parameter %}
     {% endfor %}
     {% if method.requestType %}
       {% parameter %}'postBody' => $postBody{% end_parameter %}
     {% endif %}
-  {% end_parameter_list %});
+  {% end_parameter_list %});{% endindent %}
 {% if method.optional_parameters %}
-  $params = array_merge($params, $optParams);
+{% indent %}$params = array_merge($params, $optParams);{% endindent %}
 {% endif %}
-  $data = $this->__call('{{ method.wireName }}', array($params));
-{% if method.response %}
+{% indent %}$data = $this->__call('{{ method.wireName }}', array($params));{% endindent %}
+{% indent %}{% if method.response %}
   if ($this->useObjects()) {
-    return new {{ method.responseType.className }}($data);
+{% indent %}return new {{ method.responseType.className }}($data);{% endindent %}
   } else {
-    return $data;
+{% indent %}return $data;{% endindent %}
   }
 {% else %}
   return $data;
 {% endif %}
+{% endindent %}
 {% endfilter %}
 }

@@ -6,7 +6,7 @@ require_once 'service/apiService.php';
 require_once 'service/apiServiceRequest.php';
 
 {% for resource in api.resources %}
-{% indent %}{% emit_resource_def resource %}{% endindent %}
+{% emit_resource_def resource %}
 {% endfor %}
 {% for method in api.methods %}
 {% indent %}{% emit_resource_def method %}{% endindent %}
@@ -26,28 +26,32 @@ require_once 'service/apiServiceRequest.php';
  *
  * @author Google, Inc.
  */
-class api{{ api.className }}Service extends apiService {
+class api{{ api.className }}Service extends apiService
+{
 {% filter noblanklines %}{% for resource in api.resources %}
 {% indent %}public ${{ resource.wireName }};{% endindent %}
 {% endfor %}{% endfilter %}
-  /**{% filter block_comment %}
-   * Constructs the internal representation of the {{ api.className }} service.
-   * {% endfilter %}
-   *
-   * @param apiClient apiClient
-   */
-  public function __construct(apiClient $apiClient) {
-    $this->rpcPath = '/rpc';
-    $this->restBasePath = '{{ api.basePath }}';
-    $this->version = '{{ api.version }}';
-    $this->serviceName = '{{ api.name }}';
-    $this->io = $apiClient->getIo();
+{% indent %}
+/**{% filter block_comment %}
+ * Constructs the internal representation of the {{ api.className }} service.
+ * {% endfilter %}
+ *
+ * @param apiClient $apiClient apiClient object
+ */
+public function __construct(apiClient $apiClient)
+{
+{% indent %}$this->rpcPath = '/rpc';
+$this->restBasePath = '{{ api.basePath }}';
+$this->version = '{{ api.version }}';
+$this->serviceName = '{{ api.name }}';
+$this->io = $apiClient->getIo();
 
-    $apiClient->addService($this->serviceName, $this->version);
+$apiClient->addService($this->serviceName, $this->version);
 {% filter noblanklines %}
 {% for resource in api.resources %}
-    $this->{{ resource.wireName }} = new {{ resource.className }}ServiceResource($this, $this->serviceName, '{{ resource.wireName }}', json_decode('{{ resource.json }}', true));
+$this->{{ resource.wireName }} = new {{ resource.className }}ServiceResource($this, $this->serviceName, '{{ resource.wireName }}', json_decode('{{ resource.json }}', true));
 {% endfor %}
-{% endfilter %}
-  }
+{% endfilter %}{% endindent %}
+}
+{% endindent %}
 }

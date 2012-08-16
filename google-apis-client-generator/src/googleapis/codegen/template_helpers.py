@@ -1,4 +1,4 @@
-#!/usr/bin/python2.6
+#!/usr/bin/python
 #
 # Copyright 2011 Google Inc. All Rights Reserved.
 #
@@ -75,10 +75,10 @@ _IMPORT_REGEX = '_IMPORT_REGEX'
 _IMPORT_TEMPLATE = '_IMPORT_TEMPLATE'
 
 _defaults = {
-    _LINE_BREAK_INDENT: 2,
+    _LINE_BREAK_INDENT: 4,
     _LINE_WIDTH: 40,
     _PARAMETER_INDENT: 4,
-    _LEVEL_INDENT: 2,
+    _LEVEL_INDENT: 4,
     _COMMENT_START: '# ',
     _COMMENT_CONTINUE: '# ',
     _COMMENT_END: '',
@@ -134,6 +134,9 @@ _language_defaults = {
         _DOC_COMMENT_CONTINUE: '// ',
         },
     'php': {
+        _LINE_BREAK_INDENT: 4,
+        _PARAMETER_INDENT: 4,
+        _LEVEL_INDENT: 4,
         _LINE_WIDTH: 80,
         _COMMENT_START: '/* ',
         _COMMENT_CONTINUE: ' * ',
